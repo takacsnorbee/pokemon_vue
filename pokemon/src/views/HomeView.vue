@@ -44,8 +44,8 @@ export default {
   },
   methods: {
     selectPokemon(name) {
+      console.log(name)
       this.$store.dispatch('fetchSelected', {selectedName: name});
-      this.$router.push('/pokemon')
     }
   },
   watch: {
