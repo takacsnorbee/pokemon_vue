@@ -3,11 +3,12 @@
     <h1>This is a pokemon page</h1>
     <img :src="pokemonToShow.sprites.front_default" :alt="pokemonToShow.name">
     <router-link to="/">Back</router-link>
-    <div @click="pokemonIsCatched = !pokemonIsCatched" class="catch-btn">{{ pokemonIsCatched ? 'Release':'Catch' }}</div>
-    <div class="name">{{pokemonToShow.name}}</div>
-    <div class="weight">{{pokemonToShow.weight}}</div>
-    <div class="height">{{pokemonToShow.height}}</div>
-    <div class="abilities">{{ abilities }}</div>
+    <div v-if="isCatched(pokemonToShow.name)" @click="releasePokemon(pokemonToShow.name)" class="release-btn">Release</div>
+    <div v-else @click="catchPokemon(pokemonToShow.name)" class="catch-btn">Catch</div>
+    <div class="name">Name: {{pokemonToShow.name}}</div>
+    <div class="weight">Weight: {{pokemonToShow.weight}}</div>
+    <div class="height">Height: {{pokemonToShow.height}}</div>
+    <div class="abilities">Abilities: {{ abilities }}</div>
   </div>
   <div v-else>
     <h1>No selected Pokemon</h1>
@@ -20,7 +21,6 @@ export default {
   name: 'PokemonView',
   data() {
     return {
-      pokemonIsCatched: false,
     }
   },
   computed: {
@@ -36,8 +36,21 @@ export default {
       return abilities.join(', ')
     }
   },
+  methods: {
+    catchPokemon(pokemonName) {
+      console.log('catch pokemon')
+      console.log(pokemonName)
+      this.$store.commit('setCatchedPokemon', {pokemonName: pokemonName})
+    },
+    releasePokemon(pokemonName) {
+      this.$store.commit('setReleasedPokemon', {pokemonName: pokemonName})
+    },
+    isCatched(pokemonName) {
+      let catchedPokemons = this.$store.getters.getCatchedPokemon;
+      return Object.values(catchedPokemons).includes(pokemonName) ? true : false;
+    }
+  },
   mounted() {
-    console.log('mounted')
   },
   components: {
   }

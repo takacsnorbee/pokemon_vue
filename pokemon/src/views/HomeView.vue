@@ -10,28 +10,25 @@
       <div class="show-catched-btn" @click="showCatched = !showCatched">{{ showCatched ? 'Show catched only':'Show all'}}</div>
       <h2 v-if="showResult">Result:</h2>
     </div>
-    <div class="pokemon-tiles-wrapper">
-      <div v-for="pokemon in pokemons" 
-          :key="pokemon.pokemon.url" 
-          @click="selectPokemon(pokemon.pokemon.name)" 
-          :class="pokemon.pokemon.catched?'catched-div':''" >
-        {{pokemon.pokemon.name}}
+        <div class="pokemon-tiles-wrapper">
+          <div v-for="pokemon in pokemons" 
+              :key="pokemon.pokemon.url" 
+              @click="selectPokemon(pokemon.pokemon.name)" 
+              :class="isCatched(pokemon.pokemon.name) ? 'catched-div' : ''" >
+            {{pokemon.pokemon.name}}
+          </div>
       </div>
-    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'HomeView',
-  components: {
-  },
   data() {
     return {
-      showCatched: true,
+      showCatched: false,
       selectedType: '',
       findPokemonByName: '',
       showResult: false,
@@ -42,33 +39,29 @@ export default {
       return this.$store.getters.getTypes;
     },
     pokemons() {
-      let pokemons = this.$store.getters.getPokemons;
-      let catchedPokemons = this.$store.getters.getCatchedPokemon;
-      pokemons.map( (e) => {
-        catchedPokemons.map( f => {
-          if(f === e.pokemon.name) {
-            console.log('megegyező név')
-            e.pokemon.catched = true;
-          } else {
-            e.pokemon.catched = false;
-          }
-        })
-      })
-            console.log(catchedPokemons)
-            console.log(pokemons)
-      return pokemons;
+      if(this.showCatched) {
+        return this.$store.getters.getPokemonsFilteredByCatch;
+      } else {
+        return this.$store.getters.getPokemons;
+      }
     }
   },
   methods: {
     selectPokemon(name) {
-      console.log(name)
       this.$store.dispatch('fetchSelected', {selectedName: name});
+    },
+    isCatched(name) {
+      let tempCatchedPokemon = this.$store.getters.getCatchedPokemon;
+      return tempCatchedPokemon.includes(name) ? true : false;
     }
   },
   watch: {
     selectedType() {
       this.showResult = true;
       this.$store.dispatch('fetchPokemons', {typeName: this.selectedType});
+    },
+    findPokemonByName() {
+      console.log(this.findPokemonByName)
     }
   },
   mounted() {

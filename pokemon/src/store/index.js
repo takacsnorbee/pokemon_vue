@@ -7,13 +7,28 @@ export default createStore({
     types: [],
     pokemons: [],
     selectedPokemon: [],
-    catchedPokemons: ['ivysaur'],
+    catchedPokemons: ['ivysaur', 'beedrill'],
   },
   getters: {
     getTypes: state => state.types,
     getPokemons: state => state.pokemons,
     getSelectedPokemon: state => state.selectedPokemon,
-    getCatchedPokemon: state => state.catchedPokemons
+    getCatchedPokemon: state => state.catchedPokemons,
+    getPokemonsFilteredByCatch: state => {
+      let tempCatchedPokemons = state.catchedPokemons;
+      let tempPokemons = [];
+      tempCatchedPokemons.forEach( e => {
+        state.pokemons.filter( f => {
+          if (f.pokemon.name == e) {
+            tempPokemons.push(f);
+          }
+        })
+      })
+      return tempPokemons;
+    },
+    getPokemonsFilteredByName: state => {
+      console.log(state)
+    }
   },
   mutations: {
     setTypes(state, payload) {
@@ -27,9 +42,11 @@ export default createStore({
       state.selectedPokemon = payload;
     },
     setCatchedPokemon(state, payload) {
-      console.log(payload);
       state.catchedPokemons.push(payload.pokemonName);
-    }
+    },
+    setReleasedPokemon(state, payload) {
+      state.catchedPokemons = Object.values(state.catchedPokemons).filter( e => e !== payload.pokemonName);
+    },
   },
   actions: {
     fetchType({commit}) {
