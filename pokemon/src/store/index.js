@@ -7,17 +7,13 @@ export default createStore({
     types: [],
     pokemons: [],
     selectedPokemon: [],
+    catchedPokemons: ['ivysaur'],
   },
   getters: {
-    getTypes: (state) => {
-      return state.types;
-    },
-    getPokemons: (state) => {
-      return state.pokemons;
-    },
-    getSelectedPokemon: (state) => {
-      return state.selectedPokemon;
-    },
+    getTypes: state => state.types,
+    getPokemons: state => state.pokemons,
+    getSelectedPokemon: state => state.selectedPokemon,
+    getCatchedPokemon: state => state.catchedPokemons
   },
   mutations: {
     setTypes(state, payload) {
@@ -30,6 +26,10 @@ export default createStore({
       console.log(payload)
       state.selectedPokemon = payload;
     },
+    setCatchedPokemon(state, payload) {
+      console.log(payload);
+      state.catchedPokemons.push(payload.pokemonName);
+    }
   },
   actions: {
     fetchType({commit}) {

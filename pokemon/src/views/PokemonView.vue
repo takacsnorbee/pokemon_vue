@@ -1,5 +1,5 @@
 <template>
-  <div class="pokemon-wrapper">
+  <div v-if="pokemonToShow" class="pokemon-wrapper">
     <h1>This is a pokemon page</h1>
     <img :src="pokemonToShow.sprites.front_default" :alt="pokemonToShow.name">
     <router-link to="/">Back</router-link>
@@ -8,6 +8,10 @@
     <div class="weight">{{pokemonToShow.weight}}</div>
     <div class="height">{{pokemonToShow.height}}</div>
     <div class="abilities">{{ abilities }}</div>
+  </div>
+  <div v-else>
+    <h1>No selected Pokemon</h1>
+    <router-link to="/">Back to home</router-link>
   </div>
 </template>
 
@@ -21,7 +25,11 @@ export default {
   },
   computed: {
     pokemonToShow() {
-      return this.$store.getters.getSelectedPokemon;
+      if(Object.keys(this.$store.getters.getSelectedPokemon).length === 0) {
+        return false;
+      } else {
+        return this.$store.getters.getSelectedPokemon;
+      }
     },
     abilities() {
       let abilities = this.$store.getters.getSelectedPokemon.abilities.map( e => e.ability.name)

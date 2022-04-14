@@ -11,7 +11,10 @@
       <h2 v-if="showResult">Result:</h2>
     </div>
     <div class="pokemon-tiles-wrapper">
-      <div v-for="pokemon in pokemons" :key="pokemon.pokemon.url" @click="selectPokemon(pokemon.pokemon.name)">
+      <div v-for="pokemon in pokemons" 
+          :key="pokemon.pokemon.url" 
+          @click="selectPokemon(pokemon.pokemon.name)" 
+          :class="pokemon.pokemon.catched?'catched-div':''" >
         {{pokemon.pokemon.name}}
       </div>
     </div>
@@ -39,7 +42,21 @@ export default {
       return this.$store.getters.getTypes;
     },
     pokemons() {
-      return this.$store.getters.getPokemons;
+      let pokemons = this.$store.getters.getPokemons;
+      let catchedPokemons = this.$store.getters.getCatchedPokemon;
+      pokemons.map( (e) => {
+        catchedPokemons.map( f => {
+          if(f === e.pokemon.name) {
+            console.log('megegyező név')
+            e.pokemon.catched = true;
+          } else {
+            e.pokemon.catched = false;
+          }
+        })
+      })
+            console.log(catchedPokemons)
+            console.log(pokemons)
+      return pokemons;
     }
   },
   methods: {
@@ -106,6 +123,10 @@ export default {
 
 .pokemon-tiles-wrapper div:nth-child(even){
   background-color: yellow;
+}
+
+.catched-div {
+  border: 1px solid green!important;
 }
 
 </style>
