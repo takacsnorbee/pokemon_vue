@@ -39,10 +39,19 @@ export default {
       return this.$store.getters.getTypes;
     },
     pokemons() {
-      if(this.showCatched) {
-        return this.$store.getters.getPokemonsFilteredByCatch;
+      if(this.findPokemonByName.length >= 2) {
+        this.$store.commit('setSearchedPokemonName', {pokemonName: this.findPokemonByName})
+        if(this.showCatched) {
+          return this.$store.getters.getCatchedPokemonsFilteredByName;
+        } else {
+          return this.$store.getters.getAllPokemonsFilteredByName;
+        }
       } else {
-        return this.$store.getters.getPokemons;
+        if(this.showCatched) {
+          return this.$store.getters.getPokemonsFilteredByCatch;
+        } else {
+          return this.$store.getters.getPokemons;
+        }
       }
     }
   },
@@ -60,9 +69,6 @@ export default {
       this.showResult = true;
       this.$store.dispatch('fetchPokemons', {typeName: this.selectedType});
     },
-    findPokemonByName() {
-      console.log(this.findPokemonByName)
-    }
   },
   mounted() {
     this.$store.dispatch('fetchType');
