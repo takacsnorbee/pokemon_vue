@@ -95,7 +95,7 @@ export default {
 
 .pokemon-tiles-wrapper {
   height: calc(100vh - 300px);
-  overflow: scroll;
+  overflow: auto;
 }
 
 .show-catched-btn {

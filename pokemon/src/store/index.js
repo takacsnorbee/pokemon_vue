@@ -4,13 +4,15 @@ import router from '@/router';
 
 export default createStore({
   state: {
+    isLoading: false,
     types: [],
     pokemons: [],
     selectedPokemon: [],
-    catchedPokemons: ['ivysaur', 'beedrill'],
+    catchedPokemons: [],
     searchedPokemonName: '',
   },
   getters: {
+    getIsLoading: state => state.isLoading,
     getTypes: state => state.types,
     getPokemons: state => state.pokemons,
     getSelectedPokemon: state => state.selectedPokemon,
@@ -27,15 +29,16 @@ export default createStore({
       return tempPokemons;
     },
     getAllPokemonsFilteredByName: state => {
-      let tempPokemons = state.pokemons.filter( e => e.pokemon.name.includes(state.searchedPokemonName));
-      return tempPokemons;
+      return state.pokemons.filter( e => e.pokemon.name.includes(state.searchedPokemonName));
     },
     getCatchedPokemonsFilteredByName: (state, getters) => {
-      let tempPokemons = getters.getPokemonsFilteredByCatch.filter( e => e.pokemon.name.includes(state.searchedPokemonName));
-      return tempPokemons;
+      return getters.getPokemonsFilteredByCatch.filter( e => e.pokemon.name.includes(state.searchedPokemonName));
     }
   },
   mutations: {
+    setIsLoading(state, payload) {
+      state.isLoading = payload;
+    },
     setTypes(state, payload) {
       state.types = payload;
     },
@@ -58,30 +61,30 @@ export default createStore({
   },
   actions: {
     fetchType({commit}) {
-      //todo spinner
+      commit('setIsLoading', true);
       axios.get('https://pokeapi.co/api/v2/type')
-      .then( data => {
-        let tempTypes = data.data.results.map((e)=> e.name);
-        commit('setTypes', tempTypes)
+        .then( data => {
+          let tempTypes = data.data.results.map((e)=> e.name);
+          commit('setTypes', tempTypes)
         })
         .catch( err => console.log(err))
         .finally( () => {
-          //todo spinner out
-        })
-    },
-    fetchPokemons({commit}, payload) {
-      //todo spinner
-      axios.get(`https://pokeapi.co/api/v2/type/${payload.typeName}`)
-        .then( data => {
-          commit('setPokemons', data.data.pokemon)
-        } )
-        .catch( err => console.log(err) )
-        .finally( () => {
-          //todo spinner out
-        } )
+            commit('setIsLoading', false);
+          })
+      },
+      fetchPokemons({commit}, payload) {
+        commit('setIsLoading', true);
+        axios.get(`https://pokeapi.co/api/v2/type/${payload.typeName}`)
+          .then( data => {
+            commit('setPokemons', data.data.pokemon)
+          })
+          .catch( err => console.log(err) )
+          .finally( () => {
+            commit('setIsLoading', false);
+          })
     },
     fetchSelected({commit}, payload) {
-      //todo spinner
+      commit('setIsLoading', true);
       axios.get(`https://pokeapi.co/api/v2/pokemon/${payload.selectedName}`)
         .then( data => {
           commit('setSelectedPokemon', data.data)
@@ -89,7 +92,7 @@ export default createStore({
         .catch( err => console.log(err) )
         .finally( () => {
           router.push('/pokemon')
-          //todo spinner out
+          commit('setIsLoading', false);
         } )
     }
   },

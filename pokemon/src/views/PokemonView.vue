@@ -38,11 +38,16 @@ export default {
   },
   methods: {
     catchPokemon(pokemonName) {
-      console.log('catch pokemon')
-      console.log(pokemonName)
+      let pokemonsInLocalStorage = localStorage.getItem('catchedPokemons');
+      pokemonsInLocalStorage = pokemonsInLocalStorage ? pokemonsInLocalStorage.split(',') : [];
+      pokemonsInLocalStorage.push(pokemonName);
+      localStorage.setItem('catchedPokemons', pokemonsInLocalStorage);
       this.$store.commit('setCatchedPokemon', {pokemonName: pokemonName})
     },
     releasePokemon(pokemonName) {
+      let pokemonsInLocalStorage = localStorage.getItem('catchedPokemons');
+      let filteredPokemons = pokemonsInLocalStorage.split(',').filter( e => e != pokemonName)
+      localStorage.setItem('catchedPokemons', filteredPokemons);
       this.$store.commit('setReleasedPokemon', {pokemonName: pokemonName})
     },
     isCatched(pokemonName) {
