@@ -23,6 +23,7 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: white;
+    z-index: 9999;
 }
 
 .spinner-text {
@@ -38,7 +39,6 @@ export default {
     border-radius: 50%;
     border: 8px solid transparent;
     position: absolute;
-    /* mix-blend-mode: overlay; */
 }
 
 .spinner-red {
