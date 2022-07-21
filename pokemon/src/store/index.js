@@ -60,7 +60,7 @@ export default createStore({
     }
   },
   actions: {
-    fetchType({commit}) {
+  fetchType({commit}) {
       commit('setIsLoading', true);
       axios.get('https://pokeapi.co/api/v2/type')
         .then( data => {
@@ -71,17 +71,17 @@ export default createStore({
         .finally( () => {
             commit('setIsLoading', false);
           })
-      },
-      fetchPokemons({commit}, payload) {
-        commit('setIsLoading', true);
-        axios.get(`https://pokeapi.co/api/v2/type/${payload.typeName}`)
-          .then( data => {
-            commit('setPokemons', data.data.pokemon)
-          })
-          .catch( err => console.log(err) )
-          .finally( () => {
-            commit('setIsLoading', false);
-          })
+      },  
+    fetchPokemons({commit}, payload) {
+      commit('setIsLoading', true);
+      axios.get(`https://pokeapi.co/api/v2/type/${payload.typeName}`)
+        .then( data => {
+          commit('setPokemons', data.data.pokemon)
+        })
+        .catch( err => console.log(err) )
+        .finally( () => {
+          commit('setIsLoading', false);
+        })
     },
     fetchSelected({commit}, payload) {
       commit('setIsLoading', true);

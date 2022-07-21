@@ -7,7 +7,7 @@
         <option v-for="type in types" :key="type" :value="type">{{ type }}</option>
       </select>
       <input type="text" v-model="findPokemonByName" placeholder="Search by name">
-      <div class="show-catched-btn" @click="showCatched = !showCatched">{{ showCatched ? 'Show catched only':'Show all'}}</div>
+      <div class="show-catched-btn" @click="showCatched = !showCatched">{{ showCatched ? 'Show all':'Show catched only'}}</div>
       <transition>
         <h2 v-if="showResult">Result:</h2>
       </transition>
